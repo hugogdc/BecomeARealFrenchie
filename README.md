@@ -14,3 +14,28 @@ This project should use :
   - ...
 - Vue for the front end 
 - SQL Data Base to store the differents users 
+
+
+### Files
+This Project will include:
+- server.js (Nodejs server)
+- /js
+  - index.js
+  - stats.js
+  - login.js
+  - signup.js
+  - module1.js
+  - module2.js
+  - module3.js 
+
+- /html (all share same navbar, )
+  - index.html
+  - stats.html
+  - login.html
+  - signup.html
+  - module1.html
+  - module2.html
+  - module3.html 
+
+- /css
+  - style.css (a voir plus tard)
