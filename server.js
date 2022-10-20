@@ -56,6 +56,7 @@ app.get('/module3', (req, res) => {
     res.sendFile(path.join(__dirname, "js", "module3.js"))
 });
 app.get('/login', (req, res) => {
+    console.log(req.query)
     res.sendFile(path.join(__dirname, "html", "login.html"))
 });
 
