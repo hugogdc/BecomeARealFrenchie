@@ -2,7 +2,7 @@ body{
     background-color: blue;
     border: auto;
 }
-form{
+.Tab{
     border-radius: 5px;
     min-width: 450px;
     width: auto;

@@ -6,6 +6,10 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, "module1.html"));
     console.log();
 });
+app.get('/module1.htm/?', (req, res) => {
+    res.sendFile(path.join(__dirname, "module1.html"));
+    console.log();
+});
 app.get('/module1.js', (req, res) => {
     res.sendFile(path.join(__dirname,"module1.js"))
     
