@@ -36,21 +36,29 @@ app.get('/accountImg', (req, res) => {
     res.sendFile(path.join(__dirname, "img", "accountImg.png"));
     console.log();
 });
+app.get('/firstPage', (req, res) => {
+    res.sendFile(path.join(__dirname, "img", "firstPage.jpg"));
+    console.log();
+});
 app.get('/style.css', (req, res) => {
     res.sendFile(path.join(__dirname, "css", "style.css"))
 });
-app.get('/script.js', (req, res) => {
+app.get('/script', (req, res) => {
     res.sendFile(path.join(__dirname, "js", "script.js"))
 });
-app.get('/module1.js', (req, res) => {
+app.get('/module1', (req, res) => {
     res.sendFile(path.join(__dirname, "js", "module1.js"))
 });
-app.get('/module2.js', (req, res) => {
+app.get('/module2', (req, res) => {
     res.sendFile(path.join(__dirname, "js", "module2.js"))
 });
-app.get('/module3.js', (req, res) => {
+app.get('/module3', (req, res) => {
     res.sendFile(path.join(__dirname, "js", "module3.js"))
 });
+app.get('/login', (req, res) => {
+    res.sendFile(path.join(__dirname, "html", "login.html"))
+});
+
 
 // MySQL
 app.get('/dbquery', (req, res) => {
