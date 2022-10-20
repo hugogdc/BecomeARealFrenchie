@@ -26,7 +26,7 @@ This Project will include:
   - signup.js
   - module1.js
   - module2.js
-  - module3.js 
+  - module3.js
 
 - /html (all share same navbar, )
   - index.html
@@ -39,3 +39,8 @@ This Project will include:
 
 - /css
   - style.css (a voir plus tard)
+
+- /database
+  - schema.sql
+  - seed.sql
+  - queries.sql
