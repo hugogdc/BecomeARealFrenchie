@@ -2,69 +2,84 @@ const express = require('express');
 const cookieParser  = require('cookie-parser');
 const path = require('path');
 const mysql = require('mysql');
-
-// Create connection
-const con = mysql.createConnection({
-    host : 'localhost',
-    user : 'root',
-    password : 'hugohugothink',
-    database : 'webprojecttest'
-})
-
-// con.connect((err) => {
-//     if(err){
-//         throw err;
-//     }
-//     console.log('mySQL Database connected ! ')
-// })
-
+const bcrypt = require('bcrypt');
 const app = express();
 
 
+app.use(express.json())
+app.use(express.urlencoded({extended:true}))
 app.use(cookieParser());
+app.use(express.static('public'));
 
-// serve the static files
+
+
+// Create connection to our AWS RDS mySQL Database
+const con = mysql.createConnection({
+    host : 'frenchiedb.ckyp42t7iyjr.us-west-2.rds.amazonaws.com',
+    user : 'Root',
+    password : 'rrroooooottt',
+    database: 'frenchiedb'
+})
+// connect to the database
+con.connect((err) => {
+    if (err) throw err;
+    console.log('AWS mySQL Database connected !');
+})
+
+
+
+// serve the index
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, "html", "index.html"));
     console.log();
 });
-app.get('/homeLogo', (req, res) => {
-    res.sendFile(path.join(__dirname, "img", "homeLogo.png"));
-    console.log();
+
+
+// signup
+app.get('/signup', (req, res) => {
+    res.sendFile(path.join(__dirname, "html", "signup.html"))
 });
-app.get('/accountImg', (req, res) => {
-    res.sendFile(path.join(__dirname, "img", "accountImg.png"));
-    console.log();
+app.post('/signup', async (req, res) => {
+    console.log(req.body);
+    try{
+        const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    }catch{
+    }
+    res.status(200);
 });
-app.get('/firstPage', (req, res) => {
-    res.sendFile(path.join(__dirname, "img", "firstPage.jpg"));
-    console.log();
-});
-app.get('/style.css', (req, res) => {
-    res.sendFile(path.join(__dirname, "css", "style.css"))
-});
-app.get('/script', (req, res) => {
-    res.sendFile(path.join(__dirname, "js", "script.js"))
-});
-app.get('/module1', (req, res) => {
-    res.sendFile(path.join(__dirname, "js", "module1.js"))
-});
-app.get('/module2', (req, res) => {
-    res.sendFile(path.join(__dirname, "js", "module2.js"))
-});
-app.get('/module3', (req, res) => {
-    res.sendFile(path.join(__dirname, "js", "module3.js"))
-});
+
+
+// login
 app.get('/login', (req, res) => {
-    console.log(req.query)
     res.sendFile(path.join(__dirname, "html", "login.html"))
+});
+app.post('/login', async (req, res) => {
+    console.log(req.body);
+    try{
+        const hashedPassword = await bcrypt.hash(req.body.password, 10);
+        let sql = `select iduser from user where (password = '${hashedPassword}');`;
+        console.log(sql);
+        con.query(sql, function (err, result){
+            if(err) throw err;
+            console.log(result);
+        });
+    }catch{
+        res.redirect("/login");
+    }
+
 });
 
 
 // MySQL
 app.get('/dbquery', (req, res) => {
     let sql = 'select * from user';
+    con.query(sql, function (err, result){
+        if (err)throw err;
+        
+    });
+    res.send(result);
 })
+
 
 // COOKIES
 app.get('/set-cookie', (req, res) => {
@@ -83,19 +98,9 @@ app.get('/del-cookie', (req, res) => {
 
 
 
-// serve the json info with the lenght associated to the sent name
-// app.get('/getLength', function(req, res) {
-//     console.log(req.query);
-//     var reqJson = req.query.name;
-//     var result = JSON.stringify({name:reqJson, lenght:reqJson.length});
-//     console.log("Sending  : " + result);
-//     res.send(result);
-// });
-
 
 var port = 3000;
 app.listen(port, function(){
     console.debug("Server listening in port : " + port);
-
 })
 
