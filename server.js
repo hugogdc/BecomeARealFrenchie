@@ -53,19 +53,21 @@ app.post('/signup', async (req, res) => {
 app.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname, "html", "login.html"))
 });
-app.post('/login', async (req, res) => {
+app.post('/login', (req, res) => {
     console.log(req.body);
     try{
-        const hashedPassword = await bcrypt.hash(req.body.password, 10);
+        const hashedPassword = bcrypt.hashSync(req.body.password, 10);
         let sql = `select iduser from user where (password = '${hashedPassword}');`;
+        console.log("")
         console.log(sql);
         con.query(sql, function (err, result){
             if(err) throw err;
-            console.log(result);
+            else console.log(result);
         });
     }catch{
         res.redirect("/login");
     }
+    res.redirect("/login");
 
 });
 
