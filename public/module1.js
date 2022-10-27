@@ -31,7 +31,11 @@ function check_true(){
         set_color("R"+R,3);
         R=0;
         C=0;
-    }else{console.log("Bad Answer")
+    }else{console.log("Bad Answer");
+    set_color("C"+C,2);
+    set_color("R"+R,2);
+    R=0;
+    C=0;
 }
 
 }

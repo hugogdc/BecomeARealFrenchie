@@ -35,6 +35,8 @@ app.get('/', (req, res) => {
 });
 app.get('/module1', (req, res) => {
     // get the name from the request
+    var name = req.query.name; // http://localhost:3000/module1?name=mayeul
+    console.log(name);
     // ask the data base for the actual level where the user is
     // get the data for this specific level
     // send back this data (json) with the module1.html
