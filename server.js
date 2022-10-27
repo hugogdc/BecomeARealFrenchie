@@ -3,6 +3,8 @@ const cookieParser  = require('cookie-parser');
 const path = require('path');
 const mysql = require('mysql');
 const bcrypt = require('bcrypt');
+const { json } = require('express');
+const { send } = require('process');
 const app = express();
 
 
@@ -31,7 +33,18 @@ con.connect((err) => {
 // serve the index
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, "html", "index.html"));
-    console.log();
+});
+app.get('/module1', (req, res) => {
+    // get the name from the request
+    // ask the data base for the actual level where the user is
+    // get the data for this specific level
+    // send back this data (json) with the module1.html
+    res.sendFile(path.join(__dirname, "html", "module1.html"));
+});
+app.post('/module1', (req, res) => {
+    // geet the name and the score from the request
+    // insert the new score to the database
+    res.redirect("/");
 });
 
 
@@ -39,10 +52,11 @@ app.get('/', (req, res) => {
 app.get('/signup', (req, res) => {
     res.sendFile(path.join(__dirname, "html", "signup.html"))
 });
-app.post('/signup', async (req, res) => {
+app.post('/signup', (req, res) => {
     console.log(req.body);
     try{
-        const hashedPassword = await bcrypt.hash(req.body.password, 10);
+        const hashedPassword = bcrypt.hashSync(req.body.password, 10);
+        console.log(hashedPassword);
     }catch{
     }
     res.status(200);
@@ -53,20 +67,37 @@ app.post('/signup', async (req, res) => {
 app.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname, "html", "login.html"))
 });
-app.post('/login', async (req, res) => {
+app.post('/login', (req, res) => {
     console.log(req.body);
+    const hashedPassword = bcrypt.hashSync(req.body.password, 10);
+    console.log("exemple de hash de mot de passe", hashedPassword);
     try{
-        const hashedPassword = await bcrypt.hash(req.body.password, 10);
-        let sql = `select iduser from user where (password = '${hashedPassword}');`;
+        //if email exist then :
+        var sql = `select password from user where (email = '${req.body.email}');`;
         console.log(sql);
         con.query(sql, function (err, result){
+            if(result ==""){
+                console.log("no user associated to the email sent")
+                res.json({message:"the email is not associated to an account"});
+                return;
+            }
+            console.log("not finished")
             if(err) throw err;
-            console.log(result);
+            else { 
+                const hashedPassword = JSON.parse(JSON.stringify(result[0])).password;
+                console.log(req.body.password , hashedPassword)
+                if(bcrypt.compareSync(req.body.password, hashedPassword)){
+                    res.cookie("logedin", true);
+                    res.cookie("email", req.body.email);
+                    res.cookie("password", hashedPassword);
+                    res.send("Cookies all set!");
+                }          
+            }
         });
-    }catch{
-        res.redirect("/login");
-    }
 
+    }catch{
+        res.json("").redirect("/login");
+    }
 });
 
 
