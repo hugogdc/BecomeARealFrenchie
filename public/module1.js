@@ -1,14 +1,39 @@
-let levels=[[["manger","boire","dormir"],["drinking","slepping", "eating"],[3,1,2]]]
+let levels=[["a","b","c"],["a","b", "c"]];
 var x=0,R=0,C=0;
 var Ra=[0,0,0];
 var Ca=[0,0,0];
 let cpt=0;
-document.getElementById('R1').innerHTML = levels[cpt][0][0];
-document.getElementById('R2').innerHTML = levels[cpt][0][1];
-document.getElementById('R3').innerHTML = levels[cpt][0][2];
-document.getElementById('C1').innerHTML = levels[cpt][1][0];
-document.getElementById('C2').innerHTML = levels[cpt][1][1];
-document.getElementById('C3').innerHTML = levels[cpt][1][2];
+
+
+function shuffle(array) {
+    let currentIndex = array.length,  randomIndex;
+    while (currentIndex != 0) {
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+      [array[currentIndex], array[randomIndex]] = [
+        array[randomIndex], array[currentIndex]];
+    }
+  
+    return array;
+  }
+  
+  var Rc=[];
+  var Cc=[];
+  for(let i=0;i<levels[0].length;i++){
+    Rc[i]=levels[0][i];
+    Cc[i]=levels[1][i];
+  }
+  
+
+  shuffle(Rc);
+  shuffle(Cc);
+  document.getElementById('R1').innerHTML = Rc[0];
+  document.getElementById('R2').innerHTML = Rc[1];
+  document.getElementById('R3').innerHTML = Rc[2];
+  document.getElementById('C1').innerHTML = Cc[0];
+  document.getElementById('C2').innerHTML = Cc[1];
+  document.getElementById('C3').innerHTML = Cc[2];
+
 
 
 function set_color(btn,cpt){
@@ -19,11 +44,27 @@ function set_color(btn,cpt){
     if(cpt==3){color="green"}
     document.getElementById(btn).style.backgroundColor=color;
 }
+function search_array(array,a){
+    var ind=-1;
+    for(let i=0;i<array.length;i++){
+        console.log(a+array[i]);
+        if(array[i]==a){console.log(array[i]+" "+a+" answer"+i);return i;}
+        
+    }
+    console.log(ind);
+    return ind;}
+    
 
+    for(let i=0;i<levels[0].length;i++){
+        console.log(levels[0][i]);
+     
+    }
+    search_array(levels[0],"c");
+    
 function check_true(){
     if(R==0||C==0){ return false;}
-    console.log("C: "+C+" R: "+R);
-    if(C==levels[cpt][2][R-1]){
+    console.log("Answer:"+Cc[C-1],Rc[R-1]);
+    if(search_array(levels[0],Rc[R-1])==search_array(levels[1],Cc[C-1])){
         console.log("Good Answer");
         Ca[C-1]=-1;
         Ra[R-1]=-1;
