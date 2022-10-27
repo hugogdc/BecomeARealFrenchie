@@ -63,3 +63,9 @@ document.getElementById("R3").addEventListener("click",function(){select_R(3)});
 document.getElementById("C1").addEventListener("click",function(){select_C(1)});
 document.getElementById("C2").addEventListener("click",function(){select_C(2)});
 document.getElementById("C3").addEventListener("click",function(){select_C(3)});
+
+
+function sendScore(){ // function activated when the user finished to answer the module1
+    // it first get the user score
+    // then it 
+}
