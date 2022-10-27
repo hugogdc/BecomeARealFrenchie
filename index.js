@@ -14,6 +14,18 @@ app.get('/module1.js', (req, res) => {
     res.sendFile(path.join(__dirname,"module1.js"))
     
 });
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, "module3.html"));
+    console.log();
+});
+app.get('/module3.htm/?', (req, res) => {
+    res.sendFile(path.join(__dirname, "module3.html"));
+    console.log();
+});
+app.get('/module3.js', (req, res) => {
+    res.sendFile(path.join(__dirname,"module3.js"))
+    
+});
 app.get('/style.css', (req, res) => {
     res.sendFile(path.join(__dirname, "style.css"));
     console.log();

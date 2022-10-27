@@ -4,8 +4,11 @@ const path = require('path');
 const mysql = require('mysql');
 const bcrypt = require('bcrypt');
 const { json } = require('express');
+
 const { send } = require('process');
+
 const app = express();
+const jsonData= require('./public/data.json'); 
 
 
 app.use(express.json())
@@ -34,6 +37,25 @@ con.connect((err) => {
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, "html", "index.html"));
 });
+
+
+app.get('/module3', (req, res) => {
+    res.sendFile(path.join(__dirname, "html", "module3.html"));
+    console.log();
+
+});
+app.get('/getFact', function(req, res){
+    console.log(req.query);
+    var reqJson = req.query.number;
+    var x = Math.floor(Math.random() * jsonData.data.length);
+    console.log(x);
+    var result = jsonData.data[x].fact;
+    console.log("Sending : " + result);
+    console.log("button pressed");
+    res.send(JSON.stringify(result));
+});
+
+
 app.get('/module1', (req, res) => {
     // get the name from the request
     // ask the data base for the actual level where the user is
