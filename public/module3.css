@@ -1,0 +1,36 @@
+*{
+    align-self: auto;
+    text-align: center;
+    background-color: #6c9e9b;
+    font-family: "Montserrat", sans-serif;
+}
+
+.main{
+    align-content: center;
+    align-self: center;
+}
+.para{
+    align-self: auto;
+    display: block;
+    border-style: solid;
+    border-color: black;
+}
+
+#btnFact{
+    padding: 9px 25px;
+    background-color: #0087a8;
+    border-style: solid;
+    border-width: 2px;
+    border-color: rgb(30, 42, 43);
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.2s ease 0s;
+}
+
+button:active{
+    transform: scale(0.98);
+}
+
+button:focus{
+    outline: none;
+}
