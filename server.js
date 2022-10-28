@@ -114,7 +114,7 @@ app.post('/login', (req, res) => {
                     res.cookie("logedin", true);
                     res.cookie("email", req.body.email);
                     res.cookie("password", hashedPassword);
-                    res.send("Cookies all set!");
+                    res.redirect("/");
                 }          
             }
         });
