@@ -1,3 +1,4 @@
+
 let levels=[["a","b","c"],["a","b", "c"]];
 var x=0,R=0,C=0;
 var Ra=[0,0,0];
@@ -51,16 +52,20 @@ function search_array(array,a){
         if(array[i]==a){console.log(array[i]+" "+a+" answer"+i);return i;}
         
     }
-    console.log(ind);
-    return ind;}
-    
+    console.log(ind);return ind;
+}
 
-    for(let i=0;i<levels[0].length;i++){
-        console.log(levels[0][i]);
-     
+
+function check_finished(){
+    for(let i=0;i<3;i++){
+        if (Ra[i]!=-1){
+            return false;
+        }
     }
-    search_array(levels[0],"c");
-    
+    return true;
+}
+
+
 function check_true(){
     if(R==0||C==0){ return false;}
     console.log("Answer:"+Cc[C-1],Rc[R-1]);
@@ -72,11 +77,23 @@ function check_true(){
         set_color("R"+R,3);
         R=0;
         C=0;
+
+        if(check_finished()){
+            if(cpt==0){alert("well donne 100%");}
+            else if(cpt==1){alert("good job 50%")}
+            else{alert("think fist");}
+
+            location.href="/"
+            
+        
+        }
+        
     }else{console.log("Bad Answer");
     set_color("C"+C,2);
     set_color("R"+R,2);
     R=0;
     C=0;
+    cpt++;
 }
 
 }
