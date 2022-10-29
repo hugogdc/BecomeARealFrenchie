@@ -4,7 +4,11 @@ const path = require('path');
 const mysql = require('mysql');
 const bcrypt = require('bcrypt');
 const { json } = require('express');
+
+const { send } = require('process');
+
 const app = express();
+const jsonData= require('./public/data.json'); 
 
 
 app.use(express.json())
@@ -33,8 +37,29 @@ con.connect((err) => {
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, "html", "index.html"));
 });
+
+
+app.get('/module3', (req, res) => {
+    res.sendFile(path.join(__dirname, "html", "module3.html"));
+    console.log();
+
+});
+app.get('/getFact', function(req, res){
+    console.log(req.query);
+    var reqJson = req.query.number;
+    var x = Math.floor(Math.random() * jsonData.data.length);
+    console.log(x);
+    var result = jsonData.data[x].fact;
+    console.log("Sending : " + result);
+    console.log("button pressed");
+    res.send(JSON.stringify(result));
+});
+
+
 app.get('/module1', (req, res) => {
     // get the name from the request
+    var name = req.query.name; // http://localhost:3000/module1?name=mayeul
+    console.log(name);
     // ask the data base for the actual level where the user is
     // get the data for this specific level
     // send back this data (json) with the module1.html
@@ -46,15 +71,16 @@ app.post('/module1', (req, res) => {
     res.redirect("/");
 });
 
+
 // signup
 app.get('/signup', (req, res) => {
     res.sendFile(path.join(__dirname, "html", "signup.html"))
 });
-app.post('/signup', async (req, res) => {
+app.post('/signup', (req, res) => {
     console.log(req.body);
     try{
-        const salt = bcrypt.salt()
-        const hashedPassword = await bcrypt.hash(req.body.password, 10);
+        const hashedPassword = bcrypt.hashSync(req.body.password, 10);
+        console.log(hashedPassword);
     }catch{
     }
     res.status(200);
@@ -67,41 +93,35 @@ app.get('/login', (req, res) => {
 });
 app.post('/login', (req, res) => {
     console.log(req.body);
+    const hashedPassword = bcrypt.hashSync(req.body.password, 10);
+    console.log("exemple de hash de mot de passe", hashedPassword);
     try{
         //if email exist then :
-        var sql = `select exists(select iduser from user where (password = '${req.body.password}' and email = '${req.body.email}'));`;
+        var sql = `select password from user where (email = '${req.body.email}');`;
         console.log(sql);
         con.query(sql, function (err, result){
+            if(result ==""){
+                console.log("no user associated to the email sent")
+                res.json({message:"the email is not associated to an account"});
+                return;
+            }
+            console.log("not finished")
             if(err) throw err;
-            else {
-                JSON.parse(JSON.stringify(result));
-                console.log(result);
+            else { 
+                const hashedPassword = JSON.parse(JSON.stringify(result[0])).password;
+                console.log(req.body.password , hashedPassword)
+                if(bcrypt.compareSync(req.body.password, hashedPassword)){
+                    res.cookie("logedin", true);
+                    res.cookie("email", req.body.email);
+                    res.cookie("password", hashedPassword);
+                    res.send("Cookies all set!");
+                }          
             }
         });
 
-        // var sql2 = `select iduser from user where (password = '${hashedPassword}');`;
-        // console.log(sql2);
-        // con.query(sql2, function (err, result){
-        //     if(err) throw err;
-        //     else console.log("result 2 : " + JSON.stringify(result));
-        // });
-        // bcrypt.compare(req.body.password, result, function(err, res) {
-        //     if (err){
-        //       // handle error
-        //     }
-        //     if (res) {
-        //       // Send JWT
-        //     } else {
-        //       // response is OutgoingMessage object that server response http request
-        //       return response.json({success: false, message: 'passwords do not match'});
-        //     }
-        //   });
-
     }catch{
-        res.redirect("/login");
+        res.json("").redirect("/login");
     }
-    res.redirect("/login");
-
 });
 
 
