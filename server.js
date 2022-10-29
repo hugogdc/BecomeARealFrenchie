@@ -35,6 +35,11 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, "html", "index.html"));
 });
 
+app.get('/user', (req, res) => {
+    res.sendFile(path.join(__dirname, "html", "user.html"));
+    console.log();
+});
+
 app.get('/module3', (req, res) => {
     res.sendFile(path.join(__dirname, "html", "module3.html"));
     console.log();

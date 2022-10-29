@@ -1,0 +1,11 @@
+*{
+    align-self: auto;
+    text-align: center;
+    background-color: #6c9e9b;
+    font-family: "Montserrat", sans-serif;
+}
+
+#header-image-account{
+    top: 10px;
+    position: relative;
+}

@@ -26,6 +26,18 @@ app.get('/module3.js', (req, res) => {
     res.sendFile(path.join(__dirname,"module3.js"))
     
 });
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, "user.html"));
+    console.log();
+});
+app.get('/user.htm/?', (req, res) => {
+    res.sendFile(path.join(__dirname, "user.html"));
+    console.log();
+});
+app.get('/user.js', (req, res) => {
+    res.sendFile(path.join(__dirname,"user.js"))
+    
+});
 app.get('/style.css', (req, res) => {
     res.sendFile(path.join(__dirname, "style.css"));
     console.log();
