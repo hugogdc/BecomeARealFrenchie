@@ -39,6 +39,12 @@ app.get('/', (req, res) => {
 });
 
 
+app.get('/user', (req, res) => {
+    res.sendFile(path.join(__dirname, "html", "user.html"));
+    console.log();
+});
+
+
 app.get('/module3', (req, res) => {
     res.sendFile(path.join(__dirname, "html", "module3.html"));
     console.log();
@@ -78,12 +84,39 @@ app.get('/signup', (req, res) => {
 });
 app.post('/signup', (req, res) => {
     console.log(req.body);
+    const hashedPassword = bcrypt.hashSync(req.body.password, 10);
     try{
-        const hashedPassword = bcrypt.hashSync(req.body.password, 10);
-        console.log(hashedPassword);
+        //if email exist then :
+        var sql = `select * from user where (email = '${req.body.email}');`;
+        console.log(sql);
+        con.query(sql, function (err, result){
+            if(result !=""){
+                console.log(JSON.parse(JSON.stringify(result[0])).password)
+                console.log("this email is already used for an account")
+                res.json({message:"this email is already used for an account"});
+                return;
+            }
+            if(err) throw err;
+            else {
+                const hashedPassword = bcrypt.hashSync(req.body.password, 10);
+                let sql = `insert into user (pseudo, email, password) value ('${req.body.name}', '${req.body.email}', '${hashedPassword}');`;
+                con.query(sql, function (err, result){
+                    if(err)throw err;
+
+                });
+                console.log(req.body.password , hashedPassword)
+                if(bcrypt.compareSync(req.body.password, hashedPassword)){
+                    res.cookie("logedin", true);
+                    res.cookie("email", req.body.email);
+                    res.cookie("password", hashedPassword);
+                    res.redirect("/");
+                }          
+            }
+        });
+
     }catch{
+        res.json("").redirect("/login");
     }
-    res.status(200);
 });
 
 
@@ -105,7 +138,6 @@ app.post('/login', (req, res) => {
                 res.json({message:"the email is not associated to an account"});
                 return;
             }
-            console.log("not finished")
             if(err) throw err;
             else { 
                 const hashedPassword = JSON.parse(JSON.stringify(result[0])).password;
@@ -114,7 +146,7 @@ app.post('/login', (req, res) => {
                     res.cookie("logedin", true);
                     res.cookie("email", req.body.email);
                     res.cookie("password", hashedPassword);
-                    res.send("Cookies all set!");
+                    res.redirect("/");
                 }          
             }
         });
