@@ -40,8 +40,45 @@ app.get('/', (req, res) => {
 
 
 app.get('/user', (req, res) => {
-    res.sendFile(path.join(__dirname, "html", "user.html"));
-    console.log();
+    console.log(req.cookies.email);
+    var email = req.cookies.email;
+    var password = req.cookies.password;
+    try{
+        //if email exist then :
+        var sql = `select iduser from user where(password= '${password}' and email='${email}');`;
+        //var sql = `select password from user where (email = '${req.body.email}');`;
+        console.log(sql);
+        con.query(sql, function (err, result){
+            if(result ==""){
+                console.log("no account associated, cookie error")
+                res.status(404).redirect("/");
+                return;
+            }
+            if(err) throw err;
+            else { 
+                console.log(result);
+                var iduser = result[0].iduser;
+                console.log(iduser);
+                var sql = `select * from lvlscore where iduser=${iduser}`;
+                con.query(sql, function (err, result2){
+                    console.log(result2)
+                    console.log(result2.length)
+                    var options = {
+                        headers: {
+                            "data" : result2
+                        }
+                      };
+                    res.sendFile(path.join(__dirname, "html", "user.html"), options)
+                });         
+            }
+        });
+
+    }catch{
+        res.json("").redirect("/login");
+    }
+
+    // res.sendFile(path.join(__dirname, "html", "user.html"));
+    // console.log();
 });
 
 
