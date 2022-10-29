@@ -5,15 +5,23 @@ Become A Real Frenchie is our final project for the Advanced Web Programming mod
 The project is an Website that will allows anybody to learn very common idioms and expression from the french language.
 The site should include different ways to learn these expressions and multiple levels for every modules, and also a stat page that summon the activities and performance of the user.
 There will be a loger with a connected data base from the server side. The Data Base will store : 
+- the different levels
+- the users
+- the user's scores
 
 ### Caracteristics
 This project should use :
 - Node JS for the back-end service
   - Express
-  - js cookie
-  - ...
-- Vue for the front end 
-- SQL Data Base to store the differents users 
+  - ookie-parser
+  - bcrypt
+- SQL Data Base to store the differents users (in AWS)
+
+
+Credentials for an account : 
+- pseudo : hugo
+- email : hugo@gmail.com
+- password : "password"
 
 
 ### Files
@@ -40,7 +48,4 @@ This Project will include:
 - /css
   - style.css (a voir plus tard)
 
-- /database
-  - schema.sql
-  - seed.sql
-  - queries.sql
+no data base files because the database is already launched

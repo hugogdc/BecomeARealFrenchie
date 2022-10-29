@@ -41,44 +41,7 @@ app.get('/', (req, res) => {
 
 app.get('/user', (req, res) => {
     console.log(req.cookies.email);
-    var email = req.cookies.email;
-    var password = req.cookies.password;
-    try{
-        //if email exist then :
-        var sql = `select iduser from user where(password= '${password}' and email='${email}');`;
-        //var sql = `select password from user where (email = '${req.body.email}');`;
-        console.log(sql);
-        con.query(sql, function (err, result){
-            if(result ==""){
-                console.log("no account associated, cookie error")
-                res.status(404).redirect("/");
-                return;
-            }
-            if(err) throw err;
-            else { 
-                console.log(result);
-                var iduser = result[0].iduser;
-                console.log(iduser);
-                var sql = `select * from lvlscore where iduser=${iduser}`;
-                con.query(sql, function (err, result2){
-                    console.log(result2)
-                    console.log(result2.length)
-                    var options = {
-                        headers: {
-                            "data" : result2
-                        }
-                      };
-                    res.sendFile(path.join(__dirname, "html", "user.html"), options)
-                });         
-            }
-        });
-
-    }catch{
-        res.json("").redirect("/login");
-    }
-
-    // res.sendFile(path.join(__dirname, "html", "user.html"));
-    // console.log();
+    res.sendFile(path.join(__dirname, "html", "user.html"));
 });
 
 
@@ -143,6 +106,7 @@ app.post('/signup', (req, res) => {
                 });
                 console.log(req.body.password , hashedPassword)
                 if(bcrypt.compareSync(req.body.password, hashedPassword)){
+                    res.cookie("pseudo", req.body.name)
                     res.cookie("logedin", true);
                     res.cookie("email", req.body.email);
                     res.cookie("password", hashedPassword);
@@ -165,9 +129,11 @@ app.post('/login', (req, res) => {
     console.log(req.body);
     const hashedPassword = bcrypt.hashSync(req.body.password, 10);
     console.log("exemple de hash de mot de passe", hashedPassword);
+    var email = req.body.email;
+    var password = req.body.password;
     try{
         //if email exist then :
-        var sql = `select password from user where (email = '${req.body.email}');`;
+        var sql = `select password, pseudo, iduser from user where (email = '${email}');`;
         console.log(sql);
         con.query(sql, function (err, result){
             if(result ==""){
@@ -178,18 +144,30 @@ app.post('/login', (req, res) => {
             if(err) throw err;
             else { 
                 const hashedPassword = JSON.parse(JSON.stringify(result[0])).password;
-                console.log(req.body.password , hashedPassword)
-                if(bcrypt.compareSync(req.body.password, hashedPassword)){
-                    res.cookie("logedin", true);
-                    res.cookie("email", req.body.email);
-                    res.cookie("password", hashedPassword);
-                    res.redirect("/");
-                }          
+                const pseudo = JSON.parse(JSON.stringify(result[0])).pseudo;
+                const iduser = JSON.parse(JSON.stringify(result[0])).iduser;
+                console.log(password , hashedPassword)
+                if(bcrypt.compareSync(password, hashedPassword)){
+                    var sql = `select * from lvlscore where iduser=${iduser}`;
+                    con.query(sql, function (err, result2){
+                        console.log(result2[0])
+                        for(i = 0; i<result2.length; i++){
+                            res.cookie(`module${i+1}`, result2[i]);
+                        }
+                        res.cookie("pseudo", pseudo)
+                        res.cookie("logedin", true);
+                        res.cookie("email", req.body.email);
+                        res.cookie("password", hashedPassword);
+                        res.redirect("/");
+                        return;
+                    });
+                }
+                else res.redirect("/login"); 
             }
         });
 
     }catch{
-        res.json("").redirect("/login");
+        res.redirect("/login");
     }
 });
 

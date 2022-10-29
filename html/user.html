@@ -5,16 +5,30 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="user.css" media="screen" charset="utf-8">
         <title>User Page</title>
-        <div id="top-header"><img src="account.png" /></div>
-        <div id="header-image-account"></div>
     </head>
     <body>
+        <header>
+            <a href="/"><img src="homeLogo.png" alt="" id="homeLogo.png"></a>
+            <nav>
+                <div id="logedin">
+                    <a href="/user" id="username_">username</a>
+                    <a href="/user"><img src="accountImg.png" alt="accountImg.png" id="accountImg"></a>
+                    <a href="" id="logoutBtn" onclick="logout()">Logout</a>
+                </div>
+                <a href="login" id="loginBtn">Login</a>
+               
+            </nav>        
+        </header>
+        <div id="top-header"><img src="account.png" /></div>
+        <div id="header-image-account"></div>
         <h1>My account</h1>
         <main>
-            <div class="para"><p id="paragraphe">User: <br>
-            Score module 1: <br>
-            Score module 2: <br>
-            Score module 3: </p></div>
+            <div class="para">
+                <h3 id="user_">user : </h3>
+                <h3 id="module1">module1 : </h3>
+                <h3 id="module2">module2 : </h3>
+                <h3 id="module3_">module3 : </h3>
+            </div>
             <script type="text/javascript" src="user.js"></script>
         </main>
     </body>

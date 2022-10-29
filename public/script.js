@@ -7,12 +7,13 @@ function getCookie(name) {
 function logout() {
     console.log("login out ...")
     document.cookie.split(";").forEach(function(c) { document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); });
+    window.location.replace("/");
 }
-
 // if LOGED IN
 if(getCookie("logedin") == "true"){
     document.getElementById("accountImg").style.display = "inline";
     document.getElementById("logoutBtn").style.display = "inline";
+    document.getElementById("username_").innerHTML = getCookie("pseudo");
     document.getElementById("username_").style.display = "inline";
     document.getElementById("loginBtn").style.display = "none";
     document.getElementById("logedin").style.width = "300px";
