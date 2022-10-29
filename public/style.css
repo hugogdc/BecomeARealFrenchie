@@ -9,6 +9,8 @@
     scroll-behavior: smooth;
 }
 
+
+
 header {
     display : flex;
     justify-content: space-between;
@@ -34,7 +36,32 @@ nav a{
     transform: scale(1.05);
 }
 
-#loginBtn {
+#logedin{
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+}
+
+#userLink{
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    width:150px;
+}
+
+#accountImg{
+    border-radius: 100%;
+    border-style: solid;
+    border-width: 2px;
+    border-color: rgb(30, 42, 43);
+    display: none;
+}
+
+#username_{
+    display:none;
+}
+
+#loginBtn , #logoutBtn{
     padding: 9px 25px;
     background-color: #0087a8;
     border-style: solid;
@@ -45,18 +72,23 @@ nav a{
     transition: all 0.2s ease 0s;
 }
 
-#loginBtn:hover{
+#logoutBtn{
+    background-color: #a84c00;
+    display:none;
+    top:50%;
+}
+
+#loginBtn:hover, #logoutBtn:hover{
     background-color: #08637a;
     color: #c5cacc;
 }
 
-#accountImg{
-    border-radius: 100%;
-    border-style: solid;
-    border-width: 2px;
-    border-color: rgb(30, 42, 43);
-    display: none;
+#logoutBtn:hover{
+    background-color: #7c3903;
+    color: #c5cacc;
 }
+
+
 
 .firstPage{
     position: relative;
@@ -97,6 +129,9 @@ nav a{
     height: 150px;
     background-color: #023245;
 }
+
+
+
 
 .modulescontainer{
     border-style: solid;
