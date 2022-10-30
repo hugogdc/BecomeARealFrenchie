@@ -1,11 +1,3 @@
-
-let levels=[["a","b","c"],["a","b", "c"]];
-var x=0,R=0,C=0;
-var Ra=[0,0,0];
-var Ca=[0,0,0];
-let cpt=0;
-
-
 function shuffle(array) {
     let currentIndex = array.length,  randomIndex;
     while (currentIndex != 0) {
@@ -17,24 +9,6 @@ function shuffle(array) {
   
     return array;
   }
-  
-  var Rc=[];
-  var Cc=[];
-  for(let i=0;i<levels[0].length;i++){
-    Rc[i]=levels[0][i];
-    Cc[i]=levels[1][i];
-  }
-  
-
-  shuffle(Rc);
-  shuffle(Cc);
-  document.getElementById('R1').innerHTML = Rc[0];
-  document.getElementById('R2').innerHTML = Rc[1];
-  document.getElementById('R3').innerHTML = Rc[2];
-  document.getElementById('C1').innerHTML = Cc[0];
-  document.getElementById('C2').innerHTML = Cc[1];
-  document.getElementById('C3').innerHTML = Cc[2];
-
 
 
 function set_color(btn,cpt){
@@ -85,9 +59,7 @@ function check_true(){
 
             location.href="/"
             
-        
         }
-        
     }else{console.log("Bad Answer");
     set_color("C"+C,2);
     set_color("R"+R,2);
@@ -118,13 +90,7 @@ function select_C(n,cpt){
 }
 
 
-document.getElementById("R1").addEventListener("click",function(){select_R(1)});
-document.getElementById("R2").addEventListener("click",function(){select_R(2)});
-document.getElementById("R3").addEventListener("click",function(){select_R(3)});
 
-document.getElementById("C1").addEventListener("click",function(){select_C(1)});
-document.getElementById("C2").addEventListener("click",function(){select_C(2)});
-document.getElementById("C3").addEventListener("click",function(){select_C(3)});
 
 
 function sendScore(){ // function activated when the user finished to answer the module1
@@ -154,3 +120,44 @@ if(getCookie("logedin") == "true"){
     document.getElementById("logedin").style.width = "300px";
     
 }
+
+var string_;
+var levels = [["", "", ""], ["", "", ""]]
+
+var x=0,R=0,C=0;
+var Ra=[0,0,0];
+var Ca=[0,0,0];
+let cpt=0;
+
+var Rc=[];
+var Cc=[];
+
+$.get("/module1/data", function(data, status){
+    string_ = "levels = " + data[0].idioms + ";";
+    eval(string_)
+
+    for(let i=0;i<levels[0].length;i++){
+    Rc[i]=levels[0][i];
+    Cc[i]=levels[1][i];
+    }
+
+
+
+    shuffle(Rc);
+    shuffle(Cc);
+    document.getElementById('R1').innerHTML = Rc[0];
+    document.getElementById('R2').innerHTML = Rc[1];
+    document.getElementById('R3').innerHTML = Rc[2];
+    document.getElementById('C1').innerHTML = Cc[0];
+    document.getElementById('C2').innerHTML = Cc[1];
+    document.getElementById('C3').innerHTML = Cc[2];
+
+    document.getElementById("R1").addEventListener("click",function(){select_R(1)});
+    document.getElementById("R2").addEventListener("click",function(){select_R(2)});
+    document.getElementById("R3").addEventListener("click",function(){select_R(3)});
+
+    document.getElementById("C1").addEventListener("click",function(){select_C(1)});
+    document.getElementById("C2").addEventListener("click",function(){select_C(2)});
+    document.getElementById("C3").addEventListener("click",function(){select_C(3)});
+
+});

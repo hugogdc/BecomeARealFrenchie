@@ -43,12 +43,44 @@ app.get('/user', (req, res) => {
     console.log(req.cookies.email);
     res.sendFile(path.join(__dirname, "html", "user.html"));
 });
+app.get('/user/data', (req, res) => {
+    var sql = `select iduser from user where (email = '${req.cookies.email}' and password = '${req.cookies.password}');`;
+        console.log(sql);
+        try {
+            var email = req.cookies.email;
+            var password = req.cookies.password;
+            var lvl = 0;
+                var sql = `select * from lvlscore where iduser = (select iduser from user where (email = '${email}' and password = '${password}'));`;
+                con.query(sql, function (err, result){
+                    if (err) console.log(err);
+                    if (result == ""){
+                        lvl = 1
+                    }
+                    else{
+                        lvl = 1
+                        for (i = 0; i<result.length; i++){
+                            console.log("\nlvlscore "+i+" : \n" + JSON.stringify(result[i]));
+                            if (result[i].modulenumber == 1){
+                                if (result[i].score == 100 && lvl <= result[i].lvlnumber){
+                                    lvl = result[i].lvlnumber;
+                                }
+                            }
+                        }lvl++
+                        console.log("lvl number : " + lvl)
+                        // get module1lvl where lvlnumber = highestLvl
+                    }    
+                res.json({"module1" : lvl, "module2" : null, "module3" : null});
+                });   
+
+        } catch (error) {
+            console.log(error)
+        }
+    });
+
 
 
 app.get('/module3', (req, res) => {
     res.sendFile(path.join(__dirname, "html", "module3.html"));
-    console.log();
-
 });
 app.get('/getFact', function(req, res){
     console.log(req.query);
@@ -63,18 +95,52 @@ app.get('/getFact', function(req, res){
 
 
 app.get('/module1', (req, res) => {
-    // get the name from the request
-    var name = req.query.name; // http://localhost:3000/module1?name=mayeul
-    console.log(name);
-    // ask the data base for the actual level where the user is
-    // get the data for this specific level
-    // send back this data (json) with the module1.html
     res.sendFile(path.join(__dirname, "html", "module1.html"));
 });
-app.post('/module1', (req, res) => {
-    // geet the name and the score from the request
-    // insert the new score to the database
-    res.redirect("/");
+app.get('/module1/data', (req, res) => {
+    var email = req.cookies.email;
+    var password = req.cookies.password;
+    var lvl = 0;
+    try {
+        var sql = `select * from lvlscore where iduser = (select iduser from user where (email = '${email}' and password = '${password}'));`;
+        con.query(sql, function (err, result){
+            if (err) console.log(err);
+            if (result == ""){
+                //create new lvlscore row with lvlnumber = 1 and scoe = 0
+                sql = `insert into lvlscore (modulenumber, lvlnumber, iduser) values (1, 1, (select iduser from user where (email = '${req.cookies.email}' and password = '${req.cookies.password}')));`
+                console.log(sql);
+                con.query(sql, function (err, result2){
+                    if(err)console.log(err);
+                    console.log(result2[0]);
+                });
+                lvl = 1
+            }
+            else{
+                lvl = 1
+                for (i = 0; i<result.length; i++){
+                    console.log("\nlvlscore "+i+" : \n" + JSON.stringify(result[i]));
+                    if (result[i].modulenumber == 1){
+                        if (result[i].score == 100 && lvl <= result[i].lvlnumber){
+                            lvl = result[i].lvlnumber;
+                        }
+                    }
+                }
+                lvl++
+                console.log("lvl number to send : " + lvl)
+                // get module1lvl where lvlnumber = highestLvl
+                
+            }
+            if(lvl !=0){
+                sql = `select idioms from module1lvl where (idmodule1lvl = ${lvl});`;
+                con.query(sql, function (err, result3){
+                    if (err) console.log(err);
+                    res.json(result3)
+                });
+            }
+        });
+    } catch (error) {
+        console.log(error);
+    }
 });
 
 
@@ -145,22 +211,14 @@ app.post('/login', (req, res) => {
             else { 
                 const hashedPassword = JSON.parse(JSON.stringify(result[0])).password;
                 const pseudo = JSON.parse(JSON.stringify(result[0])).pseudo;
-                const iduser = JSON.parse(JSON.stringify(result[0])).iduser;
                 console.log(password , hashedPassword)
                 if(bcrypt.compareSync(password, hashedPassword)){
-                    var sql = `select * from lvlscore where iduser=${iduser}`;
-                    con.query(sql, function (err, result2){
-                        console.log(result2[0])
-                        for(i = 0; i<result2.length; i++){
-                            res.cookie(`module${i+1}`, result2[i]);
-                        }
-                        res.cookie("pseudo", pseudo)
-                        res.cookie("logedin", true);
-                        res.cookie("email", req.body.email);
-                        res.cookie("password", hashedPassword);
-                        res.redirect("/");
-                        return;
-                    });
+                    res.cookie("pseudo", pseudo)
+                    res.cookie("logedin", true);
+                    res.cookie("email", req.body.email);
+                    res.cookie("password", hashedPassword);
+                    res.redirect("/");
+                    return;
                 }
                 else res.redirect("/login"); 
             }
