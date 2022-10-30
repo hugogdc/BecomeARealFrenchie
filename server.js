@@ -65,7 +65,7 @@ app.get('/user/data', (req, res) => {
                                     lvl = result[i].lvlnumber;
                                 }
                             }
-                        }lvl++
+                        }
                         console.log("lvl number : " + lvl)
                         // get module1lvl where lvlnumber = highestLvl
                     }    
@@ -125,7 +125,6 @@ app.get('/module1/data', (req, res) => {
                         }
                     }
                 }
-                lvl++
                 console.log("lvl number to send : " + lvl)
                 // get module1lvl where lvlnumber = highestLvl
                 
