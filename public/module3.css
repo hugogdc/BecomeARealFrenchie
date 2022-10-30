@@ -90,7 +90,7 @@ nav a{
 
 main{
     border-radius: 10px;
-    border: solid;
+    border-style: solid;
     background-color: #edf0f1;
 }
 main h1, main div{

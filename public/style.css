@@ -150,6 +150,7 @@ nav a{
 
 .modules div{
     border-style: solid;
+    border-radius: 2%;
     height: 300px;
     width : 25%;
     display: inline-block;
